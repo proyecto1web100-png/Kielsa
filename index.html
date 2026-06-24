@@ -636,7 +636,7 @@ function computeStats(rows) {
   const g = {
     prog:  sumField(rows,'prog'),
     real:  sumField(rows,'real'),
-    foto:  rows.filter(r=>r.foto).length,
+    foto:  rows.filter(r=>r.foto).reduce((a,r)=>a+r.real,0),
     n:     rows.length,
     sups:  new Set(rows.map(r=>r.sup)).size,
     zonas: new Set(rows.map(r=>r.zona)).size,
@@ -647,14 +647,14 @@ function computeStats(rows) {
   // By zona
   const byZona = {};
   Object.entries(groupBy(rows,'zona')).forEach(([z,rs]) => {
-    const prog=sumField(rs,'prog'), real=sumField(rs,'real'), foto=rs.filter(r=>r.foto).length;
+    const prog=sumField(rs,'prog'), real=sumField(rs,'real'), foto=rs.filter(r=>r.foto).reduce((a,r)=>a+r.real,0);
     byZona[z] = { prog, real, foto, n:rs.length, pct:pct(real,prog), fotoPct:real>0?foto/real*100:0 };
   });
 
   // By supervisor
   const bySup = {};
   Object.entries(groupBy(rows,'sup')).forEach(([s,rs]) => {
-    const prog=sumField(rs,'prog'), real=sumField(rs,'real'), foto=rs.filter(r=>r.foto).length;
+    const prog=sumField(rs,'prog'), real=sumField(rs,'real'), foto=rs.filter(r=>r.foto).reduce((a,r)=>a+r.real,0);
     bySup[s] = { prog, real, foto, n:rs.length, pct:pct(real,prog), zona:rs[0]?.zona||'—' };
   });
 
